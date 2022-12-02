@@ -1,2 +1,2 @@
-# RPA_script
+# Voting system automation
 Este projeto tem como objetivo a prática do uso da biblioteca Selenium para criação de um sistema RPA, onde será lido um arquivo .xlsx que conterá os dados necessários para o preenchimento de um formulário, onde cada linha corresponde a um formulário preenchido. Os dados serão utilizados juntos da biblioteca selenium para preencher um formulário do site [Feredum](https://ferendum.com/pt/), após preenchido será feito o submit e os links das pesquisas deverão ser extraidos e salvos em um arquivo a parte
