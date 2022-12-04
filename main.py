@@ -58,9 +58,9 @@ class RpaFerendum:
         ws1 = wb.active
         ws1.title = 'Links das pesquisas'
 
-        for row, search in enumerate(self._researches_list):
-            ws1.cell(row=row + 1, column=1, value=search[0])
-            ws1.cell(row=row + 1, column=2, value=search[1])
+        for row, search in enumerate(self._researches_list, start=1):
+            ws1.cell(row=row, column=1, value=search[0])
+            ws1.cell(row=row, column=2, value=search[1])
 
         wb.save(filename=self._output_file)
 
@@ -69,8 +69,8 @@ class RpaFerendum:
         driver.find_element(By.NAME, 'titulo').send_keys(data[0])
         driver.find_element(By.NAME, 'descripcion').send_keys(data[1])
         driver.find_element(By.NAME, 'creador').send_keys(data[2])
-        for i, op in enumerate(data[3]):
-            driver.find_element(By.ID, f'op{i + 1}').send_keys(op)
+        for i, op in enumerate(data[3], start=1):
+            driver.find_element(By.ID, f'op{i}').send_keys(op)
         driver.find_elements(By.NAME, 'config_anonimo')[data[4]].click()
         driver.find_elements(By.NAME, 'config_priv_pub')[data[5]].click()
         driver.find_elements(By.NAME, 'config_un_solo_voto')[data[6]].click()
