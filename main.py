@@ -5,9 +5,10 @@ import time
 
 
 class RpaFerendum:
-    def __init__(self, researches, output_file):
+    def __init__(self, researches, output_file, delimiter=';'):
         self._researches = researches
         self._output_file = output_file
+        self._delimiter = delimiter
         self._researches_list = list()
 
     @property
@@ -45,7 +46,7 @@ class RpaFerendum:
         data = list()
         for row in sheet:
             row_values = [cell.value for cell in row]
-            row_values[3] = [v.strip() for v in row_values[3].split(',')]
+            row_values[3] = [v.strip() for v in row_values[3].split(self._delimiter)]
             row_values[4:] = [0 if v == 'Sim' else 1 for v in row_values[4:]]
             data.append(row_values)
         return data[1:]
@@ -70,6 +71,8 @@ class RpaFerendum:
         driver.find_element(By.NAME, 'descripcion').send_keys(data[1])
         driver.find_element(By.NAME, 'creador').send_keys(data[2])
         for i, op in enumerate(data[3], start=1):
+            if i != 1 and i % 5 == 1:
+                driver.find_element(By.CLASS_NAME, 'btn-outline-primary').click()
             driver.find_element(By.ID, f'op{i}').send_keys(op)
         driver.find_elements(By.NAME, 'config_anonimo')[data[4]].click()
         driver.find_elements(By.NAME, 'config_priv_pub')[data[5]].click()
