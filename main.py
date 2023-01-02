@@ -24,25 +24,30 @@ class RpaFerendum:
 
     @property
     def researches(self) -> str:
-        """
-        This function is a property for the search file path
-        :return: A string representing a path to the researches file
-        """
         return self._researches
 
     @researches.setter
-    def researches(self, researches):
+    def researches(self, researches) -> None:
         self._researches = researches
 
     @property
-    def output_file(self):
+    def output_file(self) -> str:
         return self._output_file
 
     @output_file.setter
-    def output_file(self, output_file):
+    def output_file(self, output_file) -> None:
         self._output_file = output_file
 
-    def run(self):
+    @property
+    def researches_list(self):
+        return self._researches_list or list()
+
+    def run(self) -> None:
+        """ Main function
+        create the driver and runs the commands to read the questions and create the researches
+
+        :return: None
+        """
         browser = webdriver.Firefox()
 
         data = self._get_data()
@@ -55,7 +60,12 @@ class RpaFerendum:
             self._researches_list.append((link_search, link_admin))
             time.sleep(1)
 
-    def _get_data(self):
+    def _get_data(self) -> list:
+        """ Get question data
+        Reads and extracts the data in the file with the questions
+
+        :return: list of questions
+        """
         wb = load_workbook(filename=self._researches)
         sheet = wb['Pesquisas']
         data = list()
@@ -66,10 +76,12 @@ class RpaFerendum:
             data.append(row_values)
         return data[1:]
 
-    def get_researches_list(self):
-        return self._researches_list
+    def save(self) -> None:
+        """ Save research links
+        Save research and admin page links  to an xlsx file
 
-    def save(self):
+        :return: None
+        """
         wb = Workbook()
         ws1 = wb.active
         ws1.title = 'Links das pesquisas'
@@ -81,7 +93,14 @@ class RpaFerendum:
         wb.save(filename=self._output_file)
 
     @staticmethod
-    def _fill_form(driver, data):
+    def _fill_form(driver, data) -> None:
+        """ Fill in the form
+        Fill in the research form with the question data and the requested settings
+
+        :param driver: the driver to simulate the browser
+        :param data: the question data
+        :return: None
+        """
         driver.find_element(By.NAME, 'titulo').send_keys(data[0])
         driver.find_element(By.NAME, 'descripcion').send_keys(data[1])
         driver.find_element(By.NAME, 'creador').send_keys(data[2])
@@ -96,7 +115,13 @@ class RpaFerendum:
         driver.find_element(By.NAME, 'accept_terms_checkbox').click()
 
     @staticmethod
-    def _send_form(driver):
+    def _send_form(driver) -> tuple(str, str):
+        """ Submit the form
+        Submit the research form and get the link to the research and administration page
+
+        :param driver: the driver to simulate the browser
+        :return: A tuple with the link to the research and administration page
+        """
         driver.find_element(By.CLASS_NAME, 'btn-primary').click()
 
         time.sleep(1)
