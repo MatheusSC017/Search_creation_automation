@@ -5,14 +5,29 @@ import time
 
 
 class RpaFerendum:
-    def __init__(self, researches, output_file, delimiter=';'):
+    def __init__(self, researches, output_file, delimiter=';') -> None:
+        """
+        this function is the constructor of the RpaFerendum class and defines the initial value for the class variables
+
+        :param researches: Define the path for the .xlsx file that contains the data of the researches that will be
+        registered on the Ferendum website
+        :param output_file: Set the path to the .xlsx file where the links to the administration and search pages will
+        be saved
+        :param delimiter: In the options column, each possible answer is separated by a delimiter, the default value is
+        ';'
+        :return: None
+        """
         self._researches = researches
         self._output_file = output_file
         self._delimiter = delimiter
         self._researches_list = list()
 
     @property
-    def researches(self):
+    def researches(self) -> str:
+        """
+        This function is a property for the search file path
+        :return: A string representing a path to the researches file
+        """
         return self._researches
 
     @researches.setter
