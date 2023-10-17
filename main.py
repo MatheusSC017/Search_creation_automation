@@ -1,10 +1,18 @@
+"""
+Script to automate the process of creating surveys on the ferendum website
+"""
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from openpyxl import load_workbook, Workbook
-import time
 
 
 class RpaFerendum:
+    """
+    Class to automate the process of creating surveys on the ferendum website, the class will
+    receive the path to a file with the surveys and return a new file with the link to the created
+    surveys
+    """
     def __init__(self, researches, output_file, delimiter=';') -> None:
         """
         this function is the constructor of the RpaFerendum class and defines the initial value for the class variables
@@ -20,10 +28,14 @@ class RpaFerendum:
         self._researches = researches
         self._output_file = output_file
         self._delimiter = delimiter
-        self._researches_list = list()
+        self._researches_list = []
 
     @property
     def researches(self) -> str:
+        """
+        GET method for file with searches
+        :return:
+        """
         return self._researches
 
     @researches.setter
@@ -32,15 +44,28 @@ class RpaFerendum:
 
     @property
     def output_file(self) -> str:
+        """
+        GET method for output file name
+        :return: string
+        """
         return self._output_file
 
     @output_file.setter
     def output_file(self, output_file) -> None:
+        """
+        SET method for output file name
+        :param output_file: output file name
+        :return: None
+        """
         self._output_file = output_file
 
     @property
     def researches_list(self):
-        return self._researches_list or list()
+        """
+        GET method for the output list with research links
+        :return: list
+        """
+        return self._researches_list or []
 
     def run(self) -> None:
         """ Main function
@@ -52,7 +77,7 @@ class RpaFerendum:
 
         data = self._get_data()
 
-        self._researches_list = list()
+        self._researches_list = []
         for row in data:
             browser.get('https://ferendum.com/pt/')
             self._fill_form(browser, row)
@@ -68,7 +93,7 @@ class RpaFerendum:
         """
         wb = load_workbook(filename=self._researches)
         sheet = wb['Pesquisas']
-        data = list()
+        data = []
         for row in sheet:
             row_values = [cell.value for cell in row]
             row_values[3] = [v.strip() for v in row_values[3].split(self._delimiter)]
@@ -115,7 +140,7 @@ class RpaFerendum:
         driver.find_element(By.NAME, 'accept_terms_checkbox').click()
 
     @staticmethod
-    def _send_form(driver) -> tuple(str, str):
+    def _send_form(driver) -> tuple():
         """ Submit the form
         Submit the research form and get the link to the research and administration page
 
@@ -130,7 +155,8 @@ class RpaFerendum:
 
         link_search = driver.find_element(By.ID, 'textoACopiar').get_property('href')
         link_admin = driver\
-            .find_element(By.CSS_SELECTOR, 'div.card:nth-child(1) > div:nth-child(1) > a:nth-child(22)')\
+            .find_element(By.CSS_SELECTOR, 'div.card:nth-child(1) > div:nth-child(1) > '
+                                           'a:nth-child(22)')\
             .get_property('href')
 
         return link_search, link_admin
